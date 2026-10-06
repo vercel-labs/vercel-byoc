@@ -22,10 +22,10 @@ This skill directory contains:
 
 Requirements: macOS or Linux (`vercel deploy describe` doesn't run on Windows), Node 20+, AWS CLI v2 and `jq`.
 
-Install the latest Vercel CLI and check it has the BYOC commands:
+Install Vercel CLI 62.6.0 and check it has the BYOC commands:
 
 ```bash
-npm i -g vercel@latest
+npm i -g vercel@62.6.0
 vercel deploy describe --help 2>&1 | grep -q "deploy describe" && echo ok
 ```
 
