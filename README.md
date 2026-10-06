@@ -15,7 +15,7 @@ Or copy [`skills/vercel-byoc`](skills/vercel-byoc) into your agent's skills dire
 From your app's directory, ask your agent something like "Deploy this app with BYOC as a preview". The skill walks it through:
 
 1. Linking the Vercel project
-2. `vercel deploy init`, `vercel build --id` and `vercel describe`
+2. `vercel deploy init`, `vercel build --id` and `vercel deploy describe`
 3. Creating the functions in your AWS account with [`scripts/provision.mjs`](skills/vercel-byoc/scripts/provision.mjs). It shows a plan first, never overwrites existing functions, and records what it created.
 4. `vercel deploy continue`, then checking a real route on the deployment
 

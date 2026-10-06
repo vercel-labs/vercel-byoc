@@ -55,7 +55,7 @@ Trust policy, with real values filled in:
 
 Create it with `--max-session-duration 43200`. For an existing registration, keep its registered external ID.
 
-After `describe` runs, allow it to invoke the new functions. Build the ARNs from `functions[].configuration.FunctionName` and `functions[].region` in `descriptor.json`, and add them with `aws iam put-role-policy`. Do this before `vercel deploy continue`.
+After `vercel deploy describe` runs, allow it to invoke the new functions. Build the ARNs from `functions[].configuration.FunctionName` and `functions[].region` in `descriptor.json`, and add them with `aws iam put-role-policy`. Do this before `vercel deploy continue`.
 
 ## Register the AWS account with Vercel
 

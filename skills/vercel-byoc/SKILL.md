@@ -1,6 +1,6 @@
 ---
 name: vercel-byoc
-description: Deploy an existing app with Vercel Bring Your Own Cloud (BYOC), so Vercel serves the deployment while its functions run as AWS Lambda functions in the user's own AWS account. Use when the user asks to deploy with BYOC, run their Vercel functions in their AWS account, or provision the output of `vercel describe`.
+description: Deploy an existing app with Vercel Bring Your Own Cloud (BYOC), so Vercel serves the deployment while its functions run as AWS Lambda functions in the user's own AWS account. Use when the user asks to deploy with BYOC, run their Vercel functions in their AWS account, or provision the output of `vercel deploy describe`.
 ---
 
 # Vercel BYOC
@@ -8,7 +8,7 @@ description: Deploy an existing app with Vercel Bring Your Own Cloud (BYOC), so 
 Vercel builds and serves the deployment. The app's functions are created as AWS Lambda functions in the user's AWS account, and Vercel invokes them there.
 
 ```text
-link → deploy init → build --id → describe → provision → deploy continue → verify
+link → deploy init → build --id → deploy describe → provision → deploy continue → verify
 ```
 
 Work with the user's existing app. Don't scaffold a new one, add test routes, or change its framework, regions or env setup.
@@ -20,16 +20,16 @@ This skill directory contains:
 
 ## Before you start
 
-Requirements: macOS or Linux (`vercel describe` doesn't run on Windows), Node 20+, AWS CLI v2 and `jq`.
+Requirements: macOS or Linux (`vercel deploy describe` doesn't run on Windows), Node 20+, AWS CLI v2 and `jq`.
 
 Install the latest Vercel CLI and check it has the BYOC commands:
 
 ```bash
 npm i -g vercel@latest
-vercel describe --help
+vercel deploy describe --help 2>&1 | grep -q "deploy describe" && echo ok
 ```
 
-If `describe` is missing, stop. Don't fall back to a normal `vercel deploy`.
+Older CLIs print the general `deploy` help instead, so check for the `deploy describe` heading, not just the exit code. If it's missing, stop. Don't fall back to a normal `vercel deploy`.
 
 Get these from the user or the existing config, and ask for whatever is missing in one message:
 
@@ -71,14 +71,14 @@ Use this one `id` for every step that follows. On a retry, reuse the saved ID in
 
 ```bash
 vercel build --id "$id" --target "$target" --yes
-vercel describe --id "$id" --aws-account-id "$aws_account_id" --json
+vercel deploy describe --id "$id" --aws-account-id "$aws_account_id" --json
 ```
 
-`describe` writes to `.vercel/$id/`: `descriptor.json`, the function and layer ZIPs, and a copy of the original build. It also replaces `.vercel/output` with a version that has no function code and includes `provision.json`. It doesn't create anything in AWS.
+`deploy describe` writes to `.vercel/$id/`: `descriptor.json`, the function and layer ZIPs, and a copy of the original build. It also replaces `.vercel/output` with a version that has no function code and includes `provision.json`. It doesn't create anything in AWS.
 
 `.vercel/` now contains code and environment values. Don't print the descriptor or ZIPs, don't commit them, and don't use `set -x`.
 
-If the app changes before you continue, rerun `build` and `describe` with the same `id`.
+If the app changes before you continue, rerun `build` and `deploy describe` with the same `id`.
 
 ## 4. Provision in AWS
 
@@ -124,9 +124,9 @@ Report the deployment URL, the AWS account and regions, the functions created, t
 
 ## Troubleshooting
 
-- **`describe` not found:** the CLI is too old, or a different `vercel` is first on `PATH`. Check `command -v vercel`.
+- **`deploy describe` not found:** the CLI is too old, or a different `vercel` is first on `PATH`. Check `command -v vercel`.
 - **Scope or project mismatch:** run `vercel pull --yes` for the intended project and team, and check `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`.
-- **Deployment not found from `describe`:** BYOC isn't enabled for the team, or the deployment isn't waiting for provisioning.
+- **Deployment not found from `deploy describe`:** BYOC isn't enabled for the team, or the deployment isn't waiting for provisioning.
 - **AWS `AccessDenied`:** the provisioning credentials lack Lambda permissions or `iam:PassRole` on the execution role. A failed read doesn't mean the function is missing.
 - **Existing function conflicts:** stop. Don't overwrite or delete a function you didn't create.
 - **`ASSUME_ROLE_FAILED`:** fix the invocation role's trust policy (see `references/aws-setup.md`), not its permissions.
