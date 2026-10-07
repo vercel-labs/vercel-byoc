@@ -21,7 +21,7 @@ From your app's directory, ask your agent something like "Deploy this app with B
 
 Account and IAM setup is in [`references/aws-setup.md`](skills/vercel-byoc/references/aws-setup.md).
 
-Requirements: Vercel CLI 62.6.0, a Vercel team with BYOC enabled, macOS or Linux, Node 20+, AWS CLI v2 and `jq`.
+Requirements: Vercel CLI 62.7.0, a Vercel team with BYOC enabled, macOS or Linux, Node 20+, AWS CLI v2 and `jq`.
 
 ## Development
 
